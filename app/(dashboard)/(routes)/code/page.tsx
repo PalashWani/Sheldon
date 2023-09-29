@@ -5,14 +5,15 @@ import Loader from "@/components/loader";
 import { UserAvatar } from "@/components/user-avatar";
 import { BotAvatar } from "@/components/bot-avatar";
 import axios from "axios";
-//Zod can be used to define our form schema for the form below
 import { useRouter } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+//Zod can be used to define our form schema for the form below
 //it is used in constants.ts
 import * as z from "zod";
 import { Heading } from "@/components/heading";
 // This also from Shad cn
 import { FormField, FormItem, FormControl, Form } from "@/components/ui/form";
-import { MessageSquare } from "lucide-react";
+import { Code } from "lucide-react";
 //We added this react-hook-form pakage from shadcn
 import { useForm } from "react-hook-form";
 import { formSchema } from "./constants";
@@ -24,7 +25,7 @@ import { useState } from "react";
 import { ChatCompletionRequestMessage } from "openai";
 import { log } from "console";
 import { cn } from "@/lib/utils";
-const ConversationPage = () => {
+const CodePage = () => {
   const router = useRouter();
   //We are giving  a type to the useState
   const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
@@ -46,7 +47,7 @@ const ConversationPage = () => {
       };
       const newMessages = [...messages, userMessage];
 
-      const response = await axios.post("/api/conversation", {
+      const response = await axios.post("/api/code", {
         messages: newMessages,
       });
       setMessages((current) => [...current, userMessage, response.data]);
@@ -63,11 +64,11 @@ const ConversationPage = () => {
     <div>
       {/* Just passing props to the heading component */}
       <Heading
-        title="Conversation"
-        description="Next Gen Conversational AI Model."
-        icon={MessageSquare}
-        iconColor="text-violet-500"
-        bgColor="bg-violet-500/10"
+        title="Code Generation"
+        description="Generate Code USing Descriptive Text"
+        icon={Code}
+        iconColor="text-green-700"
+        bgColor="bg-green-700/10"
       />
       <div className="px-4 lg:px-8">
         <div>
@@ -89,7 +90,7 @@ const ConversationPage = () => {
                       <Input
                         className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                         disabled={isLoading}
-                        placeholder="How do I calculate the radius of a circle?"
+                        placeholder="Simple toggle button using react hooks"
                         //As we are spreading field we dont have to write the onChange onBlur etc if you go to field by ctrl + click then you can find thhese attributes there
                         {...field}
                       />
@@ -129,7 +130,23 @@ const ConversationPage = () => {
                 )}
               >
                 {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
-                <p className="text-sm">{message.content}</p>
+                <ReactMarkdown
+                // We have done these below lines to make the format of the code generated and the text more prettier and readable
+                  components={{
+                    pre: ({ node, ...props }) => (
+                      <div className="overflow-auto my-2 w-full bg-black/10 p-2 rounded-lg">
+                        <pre {...props} />
+                      </div>
+                    ),
+                    code: ({node, ...props}) => (
+                      <code className="bg-black/10 rounded-lg p-1" {...props}/>
+                    )
+                  }}
+
+                  className="text-sm overflow-hidden leading-7"
+                >
+                  {message.content || ""}
+                </ReactMarkdown>
               </div>
             ))}
           </div>
@@ -139,4 +156,4 @@ const ConversationPage = () => {
   );
 };
 
-export default ConversationPage;
+export default CodePage;
