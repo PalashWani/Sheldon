@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Montserrat } from "next/font/google";
 //lucide reaact provides us with all the fonts
 import { usePathname } from "next/navigation";
+import FreeCounter from "@/components/free-counter";
 import {
   Code,
   ImageIcon,
@@ -65,7 +66,13 @@ const routes = [
   },
 ];
 
-const Sidebar = () => {
+interface SidebarProps {
+  apiLimitCount: number;
+};
+
+const Sidebar = ({
+  apiLimitCount=0
+}: SidebarProps) => {
   const pathname = usePathname();
   return (
     <div className="flex flex-col bg-[#111827] h-full py-4 space-y-4 text-white">
@@ -101,6 +108,7 @@ const Sidebar = () => {
           ))}
         </div>
       </div>
+      <FreeCounter apiLimitCount={apiLimitCount}/>
     </div>
   );
 };
