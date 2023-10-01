@@ -25,7 +25,9 @@ import { useState } from "react";
 import { ChatCompletionRequestMessage } from "openai";
 import { log } from "console";
 import { cn } from "@/lib/utils";
+import { useProModal } from "@/hooks/use-pro-model";
 const CodePage = () => {
+  const proModal = useProModal();
   const router = useRouter();
   //We are giving  a type to the useState
   const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
@@ -54,7 +56,10 @@ const CodePage = () => {
 
       form.reset();
     } catch (error: any) {
-      console.log(error);
+      if(error?.response?.status === 403)
+      {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }

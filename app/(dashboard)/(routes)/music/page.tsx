@@ -19,8 +19,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { ChatCompletionRequestMessage } from "openai";
+import { useProModal } from "@/hooks/use-pro-model";
+
 const MusicPage = () => {
+  const proModal = useProModal();
   const router = useRouter();
   //We are giving  a type to the useState
   const [music, setMusic] = useState<string>();
@@ -44,7 +46,10 @@ const MusicPage = () => {
       setMusic(response.data.audio);
       form.reset();
     } catch (error: any) {
-      console.log(error);
+      if(error?.response?.status === 403)
+      {
+        proModal.onOpen();
+      }
       
     } finally {
       router.refresh();

@@ -30,8 +30,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useProModal } from "@/hooks/use-pro-model";
+
 import { Card, CardFooter } from "@/components/ui/card";
 const ImagePage = () => {
+  const proModal = useProModal();
   const router = useRouter();
   //We are giving  a type to the useState
   const [images, setImages] = useState<string[]>([]);
@@ -58,7 +61,10 @@ const ImagePage = () => {
 
       form.reset();
     } catch (error: any) {
-      console.log(error);
+      if(error?.response?.status === 403)
+      {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }

@@ -18,9 +18,11 @@ import { formSchema } from "./constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useProModal } from "@/hooks/use-pro-model";
+
 import { useState } from "react";
-import { ChatCompletionRequestMessage } from "openai";
 const VideoPage = () => {
+  const proModal = useProModal();
   const router = useRouter();
   //We are giving  a type to the useState
   const [video, setVideo] = useState<string>();
@@ -44,8 +46,10 @@ const VideoPage = () => {
       setVideo(response.data[0]);
       form.reset();
     } catch (error: any) {
-      console.log(error);
-      
+      if(error?.response?.status === 403)
+      {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }

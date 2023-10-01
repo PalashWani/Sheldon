@@ -24,7 +24,9 @@ import { useState } from "react";
 import { ChatCompletionRequestMessage } from "openai";
 import { log } from "console";
 import { cn } from "@/lib/utils";
+import { useProModal } from "@/hooks/use-pro-model";
 const ConversationPage = () => {
+  const proModal = useProModal();
   const router = useRouter();
   //We are giving  a type to the useState
   const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
@@ -53,9 +55,12 @@ const ConversationPage = () => {
 
       form.reset();
     } catch (error: any) {
-      console.log(error);
+      if(error?.response?.status === 403)
+      {
+        proModal.onOpen();
+      }
     } finally {
-      router.refresh();
+      router.refresh(); //Refetches the server components which helps us update the api req counter 
     }
   };
 
