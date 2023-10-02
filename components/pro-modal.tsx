@@ -1,5 +1,6 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
+import axios from "axios";
 import {
   Dialog,
   DialogContent,
@@ -13,6 +14,7 @@ import { Code, ImageIcon, MessageSquare, Music, VideoIcon,ArrowRight, Check , Za
 import { Card } from "./ui/card";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 const tools = [
     {
@@ -54,6 +56,25 @@ const tools = [
 
 const ProModal = () => {
   const proModal = useProModal();
+  const [loading, setLoading] = useState(false)
+
+  const onSubscribe = async ()=> {
+    try{
+      setLoading(true);
+      const response = await axios.get("/api/stripe");
+
+      window.location.href = response.data.url
+    }
+    catch(err)
+    {
+      console.log(err);
+      
+    }
+    finally{
+      setLoading(false);
+    }
+  }
+
   return (
     <Dialog open={proModal.isOpen} onOpenChange={proModal.onClose}>
       <DialogContent>
@@ -86,7 +107,7 @@ const ProModal = () => {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-            <Button className="w-full" variant={"premium"} size={"lg"}>
+            <Button disabled={loading} className="w-full" variant={"premium"} size={"lg"} onClick={onSubscribe}>
                 Upgrade
                 <Zap className="w-4 h-4 ml-2 fill-white"/>
             </Button>
