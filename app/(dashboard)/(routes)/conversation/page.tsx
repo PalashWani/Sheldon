@@ -25,6 +25,7 @@ import { ChatCompletionRequestMessage } from "openai";
 import { log } from "console";
 import { cn } from "@/lib/utils";
 import { useProModal } from "@/hooks/use-pro-model";
+import toast from "react-hot-toast";
 const ConversationPage = () => {
   const proModal = useProModal();
   const router = useRouter();
@@ -58,6 +59,10 @@ const ConversationPage = () => {
       if(error?.response?.status === 403)
       {
         proModal.onOpen();
+      }
+      else
+      {
+        toast.error("Something went wrong!")
       }
     } finally {
       router.refresh(); //Refetches the server components which helps us update the api req counter 

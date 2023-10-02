@@ -15,6 +15,7 @@ import { Card } from "./ui/card";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const tools = [
     {
@@ -67,8 +68,7 @@ const ProModal = () => {
     }
     catch(err)
     {
-      console.log(err);
-      
+      toast.error("Something Went Wrong!")
     }
     finally{
       setLoading(false);

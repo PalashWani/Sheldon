@@ -29,10 +29,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
+// import { cn } from "@/lib/utils";
 import { useProModal } from "@/hooks/use-pro-model";
 
 import { Card, CardFooter } from "@/components/ui/card";
+import toast from "react-hot-toast";
 const ImagePage = () => {
   const proModal = useProModal();
   const router = useRouter();
@@ -64,6 +65,10 @@ const ImagePage = () => {
       if(error?.response?.status === 403)
       {
         proModal.onOpen();
+      }
+      else
+      {
+        toast.error("Something went wrong!")
       }
     } finally {
       router.refresh();
